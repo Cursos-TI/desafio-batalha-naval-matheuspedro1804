@@ -48,14 +48,13 @@ int main() {
 
     return 0;
 }
-*/
 
 #include <stdio.h>
 
-/**
+
  * DESAFIO BATALHA NAVAL - NÍVEL AVENTUREIRO
  * Foco: Matriz 10x10, Navios Diagonais e Exibição Completa.
- */
+
 
 int main() {
     // Definição do tamanho do tabuleiro conforme requisito
@@ -94,6 +93,69 @@ int main() {
         printf("%d ", i); // Índice da linha
         for (int j = 0; j < TAMANHO; j++) {
             // Exibe 3 para navio e 0 para água
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+*/
+
+#include <stdio.h>
+#include <stdlib.h> // Para a função abs()
+
+#define TAMANHO 10
+
+int main() {
+    int tabuleiro[TAMANHO][TAMANHO] = {0};
+
+    // --- 1. HABILIDADE EM CONE ---
+    // Ponto de origem: Linha 1, Coluna 5 (Topo do cone)
+    int coneX = 1, coneY = 5;
+    for (int i = 0; i < 3; i++) { // Altura do cone
+        for (int j = -i; j <= i; j++) { // Largura expande a cada linha
+            if (coneX + i < TAMANHO && coneY + j >= 0 && coneY + j < TAMANHO) {
+                tabuleiro[coneX + i][coneY + j] = 1;
+            }
+        }
+    }
+
+    // --- 2. HABILIDADE EM CRUZ ---
+    // Centro da cruz: Linha 8, Coluna 2
+    int cruzX = 8, cruzY = 2;
+    for (int i = 0; i < TAMANHO; i++) {
+        for (int j = 0; j < TAMANHO; j++) {
+            if (i == cruzX || j == cruzY) {
+                // Limitando o tamanho da cruz para não poluir todo o mapa (opcional)
+                if (abs(i - cruzX) <= 2 && abs(j - cruzY) <= 2) {
+                    tabuleiro[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    // --- 3. HABILIDADE EM OCTAEDRO (LOSANGO) ---
+    // Centro do octaedro: Linha 5, Coluna 8
+    int octX = 5, octY = 8, raio = 2;
+    for (int i = 0; i < TAMANHO; i++) {
+        for (int j = 0; j < TAMANHO; j++) {
+            // Distância de Manhattan define o formato do octaedro/losango
+            if (abs(i - octX) + abs(j - octY) <= raio) {
+                tabuleiro[i][j] = 1;
+            }
+        }
+    }
+
+    // --- EXIBIÇÃO DO TABULEIRO FINAL ---
+    printf("--- ÁREAS ATINGIDAS PELAS HABILIDADES (1 = Afetado) ---\n\n");
+    printf("    "); // Espaçamento para o cabeçalho
+    for (int j = 0; j < TAMANHO; j++) printf("%d ", j);
+    printf("\n\n");
+
+    for (int i = 0; i < TAMANHO; i++) {
+        printf("%d | ", i); // Índice lateral
+        for (int j = 0; j < TAMANHO; j++) {
             printf("%d ", tabuleiro[i][j]);
         }
         printf("\n");
